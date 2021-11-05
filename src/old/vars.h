@@ -44,8 +44,22 @@ struct SERIALMCPFRAME{
     uint8_t MCPNR = 0; 
     uint8_t MCPSIDE = 0;
     uint8_t VALUE = 0;
-       
 };
+struct IO_ADDRESS{
+    uint8_t MCP_ADDRESS=0;
+    uint8_t MCP_SIDE=0;
+    uint8_t MCP_NUMBER=0;
+};
+
+struct OUTPUT_PROTO{
+    uint8_t INPUT_NUM = 0;
+    uint8_t TYPE = 0; 
+    uint8_t VALUE = 0;
+};
+// uint32_t Input_Address[64];
+// uint32_t Output_Address[64];
+// OUTPUT_PROTO OUTPUT_CONF[64];
+
 
 
 #endif //VARS_h

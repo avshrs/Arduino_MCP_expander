@@ -52,6 +52,8 @@ class MCP {
         void writeRaw(uint8_t side, uint8_t memory);
         void writeOne(uint8_t pin, uint8_t value, uint8_t side, uint8_t force);
         void writeAll(uint8_t values, uint8_t side, uint8_t force);
-         
+        void initialize_map();
+    
+
 };
 #endif //MCP23017_h

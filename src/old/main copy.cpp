@@ -3,6 +3,7 @@
 #include "print_s.h"
 #include "vars.h"
 #include "MCP23017.h"
+#include "GPIO_conf.h"
 #include "helpers.h"
 #include <EtherCard.h>
 #include <IPAddress.h>
@@ -14,7 +15,7 @@ MCP *mcpc[8];
 PrintBin pb;
 Communication comm;
 SERIALMCPFRAME* data_udp;
-
+GPIO_CONF *ioconf;
 
 
 // ethernet mac address - must be unique on your network
@@ -38,9 +39,16 @@ void udpSerialPrint(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_por
 void setup(){
     Serial.begin(1000000);
     mcpc[MPC1] = new MCP(MCP1_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
-    
+    mcpc[MPC2] = new MCP(MCP1_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
+    mcpc[MPC3] = new MCP(MCP1_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
+    mcpc[MPC4] = new MCP(MCP1_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
+    mcpc[MPC5] = new MCP(MCP8_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
+    mcpc[MPC6] = new MCP(MCP8_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
+    mcpc[MPC7] = new MCP(MCP8_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
     mcpc[MPC8] = new MCP(MCP8_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
    
+
+
     if (ether.begin(sizeof Ethernet::buffer, mymac, SS) == 0)
         Serial.println(F("Failed to access Ethernet controller"));
     if (!ether.dhcpSetup())
@@ -71,7 +79,9 @@ void loop(){
     mcpc[MPC8]->readAll(SIDEB);
     mcpc[MPC1]->writeAll(mcpc[MPC8]->McpMemory[SIDEB],SIDEB,NFORCE);
 
-  
+    // pb.print_binary3x8(mcpc[MPC8]->McpMemory[SIDEA],mcpc[MPC8]->McpForce[SIDEA],mcpc[MPC8]->McpState[SIDEA]);
+    // pb.print_binary3x8(mcpc[MPC8]->McpMemory[SIDEB],mcpc[MPC8]->McpForce[SIDEB],mcpc[MPC8]->McpState[SIDEB]);
+
     
     ether.packetLoop(ether.packetReceive());
     if (millis() > timer) {
@@ -79,7 +89,7 @@ void loop(){
      //static void sendUdp (char *data,uint8_t len,uint16_t sport, uint8_t *dip, uint16_t dport);
      ether.sendUdp(textToSend, sizeof(textToSend), srcPort, ether.hisip, dstPort );
     }
-    
+    //--------------------------------------------------------------------------//
     
     delay(delay_v);    
 }    
