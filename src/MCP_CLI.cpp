@@ -49,21 +49,58 @@ String MCP_CLI::getValue() {
 void MCP_CLI::serialCom(){
   if(rsReceiver()) {
 
-    if(isCmd("test")) {
-      Serial.println("HI im");
+    if(isCmd("set output enable")) {
+        int value = getValue().toInt();
+        mcp_eeprom_->write_active_output(value, 0xff);
+        mcp_eeprom_->read_active_output(value);
+        Serial.print(value);
+        Serial.print(" - set to: ");
+        Serial.println(mcp_eeprom_->AOnum[value], BIN);
     }
-    
-
-  
-
+    else if(isCmd("set output enable")) {
+        int value = getValue().toInt();
+        mcp_eeprom_->write_active_output(value, 0xff);
+        mcp_eeprom_->read_active_output(value);
+        Serial.print(value);
+        Serial.print(" - set to: ");
+        Serial.println(mcp_eeprom_->AOnum[value], BIN);
+    }
+    else if(isCmd("set output disable")) {
+        int value = getValue().toInt();
+        mcp_eeprom_->write_active_output(value, 0x00);
+        mcp_eeprom_->read_active_output(value);
+        Serial.print(value);
+        Serial.print(" - set to: ");
+        Serial.println(mcp_eeprom_->AOnum[value], BIN);
+    }
+    else if(isCmd("get outputs states")) {
+        mcp_eeprom_->read_active_outputs();
+        for(int i = 0; i < 64; i++){
+            Serial.print(i);
+            Serial.print(": ");
+            Serial.println(mcp_eeprom_->AOnum[i], BIN);
+        }
+          
+    }
+    else if(isCmd("get output state")) {
+        int value = getValue().toInt();
+        mcp_eeprom_->read_active_outputs();
+        Serial.print(value);
+        Serial.print(": ");
+        Serial.println(mcp_eeprom_->AOnum[value], BIN);
+    }
+    else{
+        Serial.println("type: help - for more informations");
+    }
     if(isCmd("help")) {
-      Serial.println("delay \t\t- set loop dlelay");
-      Serial.println("delay_mu \t\t- set from Miliseconds (1) to Microseconds (0)");
-      Serial.println("readMCP1 \t\t- read all values from MCP1 in human");
-      Serial.println("BinReadMCP1 \t\t- read all values from MCP1 in binary");
-      Serial.println("readMCP2 \t\t- read all values from MCP2 in human");
-      Serial.println("BinReadMCP2 \t\t- read all values from MCP2 in binary");
-      Serial.println("setMCP\t\t- set output from MCP setMCP e.g. setMCP,1b51 (1) adres of mpc 1, (a) side ,(1) output number , (1) state");
+      Serial.println("set output enable \t\t- set_output_enable,nr");
+      Serial.println("set output disable \t\t- set_output_disable,nr");
+      Serial.println("get output state \t\t- get_output_state,nr");
+      Serial.println("get outputs states \t\t- get_outputs_states");
     }
   }
 }
+
+void MCP_CLI::register_eeprom(MCP_eeprom *mcp_eeprom){
+    mcp_eeprom_ = mcp_eeprom;
+};

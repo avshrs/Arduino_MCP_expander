@@ -23,11 +23,11 @@ void setup(){
 
     mcp_input.register_ionum(&mcp_eeprom);
     mcp_output.register_ionum(&mcp_eeprom);
-
     
 }
 
 void loop(){
     // scan_inputs.Scan_All_Inputs();
+    mcp_cli.serialCom();
     delay(delay_v);    
 }    
