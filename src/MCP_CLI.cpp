@@ -89,14 +89,15 @@ void MCP_CLI::serialCom(){
         Serial.print(": ");
         Serial.println(mcp_eeprom_->AOnum[value], BIN);
     }
-    else{
-        Serial.println("type: help - for more informations");
-    }
-    if(isCmd("help")) {
+    
+    else if(isCmd("help")) {
       Serial.println("set output enable \t\t- set_output_enable,nr");
       Serial.println("set output disable \t\t- set_output_disable,nr");
       Serial.println("get output state \t\t- get_output_state,nr");
       Serial.println("get outputs states \t\t- get_outputs_states");
+    }
+    else{
+        Serial.println("type: help - for more informations");
     }
   }
 }

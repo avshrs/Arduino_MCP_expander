@@ -8,6 +8,7 @@ int AOmaxAddr = 128;
 
 MCP_eeprom::MCP_eeprom(){
     MCP_eeprom::read_IOnum();
+    MCP_eeprom::read_active_outputs();
 }
 // ---------------------------------------------------------
 void MCP_eeprom::write_IOnum(uint8_t io_num[64]){
@@ -22,7 +23,7 @@ void MCP_eeprom::read_IOnum(){
         IOnum[i] = EEPROM.read(i);
     }
 }
-void MCP_eeprom::write_one_IOnum(uint8_t io_num, uint8_t value){
+void MCP_eeprom::write_one_IOnum(int io_num, uint8_t value){
     EEPROM.write(AOminAddr+io_num, value);
     AOnum[AOminAddr+io_num] = value;
 }
@@ -41,12 +42,12 @@ void MCP_eeprom::read_active_outputs(){
     }
 }
 // ---------------------------------------------------------
-void MCP_eeprom::write_active_output(uint8_t ao_num, uint8_t state){
+void MCP_eeprom::write_active_output(int ao_num, uint8_t state){
     EEPROM.write(AOminAddr+ao_num, state);
     AOnum[AOminAddr+ao_num] = state;
 }
 
-void MCP_eeprom::read_active_output(uint8_t ao_num){
+void MCP_eeprom::read_active_output(int ao_num){
     AOnum[AOminAddr+ao_num] = EEPROM.read(AOminAddr+ao_num);
 }
 // ---------------------------------------------------------
@@ -59,12 +60,12 @@ void MCP_eeprom::read_active_output(uint8_t ao_num){
 
 
 void MCP_eeprom::write_clean_IOnum(){
-    for(uint8_t i = IOminAddr ; i<IOmaxAddr ; i++){
+    for(int i = IOminAddr ; i<IOmaxAddr ; i++){
         EEPROM.write(i, i);  
     }
 }
 void MCP_eeprom::write_clean_active_outputs(){
-    for(uint8_t i = AOminAddr ; i<AOmaxAddr ; i++){
+    for(int i = AOminAddr ; i<AOmaxAddr ; i++){
         EEPROM.write(i, i);  
     }
 
