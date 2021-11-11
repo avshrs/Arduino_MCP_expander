@@ -5,10 +5,11 @@
 
 class MCP_eeprom {
     public:
-        MCP_eeprom();
+        
 
         uint8_t IOnum[64];
         uint8_t AOnum[64];
+        void init_eeprom();
         
         void write_IOnum(uint8_t io_num[64]);
         void read_IOnum();

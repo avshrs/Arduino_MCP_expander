@@ -18,6 +18,7 @@ class MCP_Outputs {
     void register_ionum(MCP_eeprom *mcp_eeprom);
     void print_ionum();
     
+    
     void register_outputs();
     void update_output();
     void force_update_value();

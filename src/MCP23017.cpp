@@ -20,6 +20,7 @@ MCP::MCP(uint8_t MCPADDRSS, uint8_t GIPOA_TYPE, uint8_t GIPOA_PULL, uint8_t GIPO
         Wire.endTransmission();
     }
 
+
     Wire.beginTransmission (MCPADDRSS);  // expander has I2C address 0x20
     Wire.write(IODIRB);   // register 0 is the I/O direction register for Port A
     Wire.write(GIPOB_TYPE);   //  0x00 for all pins to output mode, 0xFF for all pins to input mode

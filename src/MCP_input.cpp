@@ -14,6 +14,7 @@ void MCP_Inputs::init_mcp_devices(){
     mcpc_in[MPC6] = new MCP(MCP6_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
     mcpc_in[MPC7] = new MCP(MCP7_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
     mcpc_in[MPC8] = new MCP(MCP8_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
+ 
    
 }
 

@@ -18,5 +18,6 @@ class MCP_Inputs {
         void scan_all_inputs();
         void add_listener(MCP_Outputs *mcp_outputs, uint8_t input_nr);
 
+
 };
 #endif //INPUT_H

@@ -10,6 +10,7 @@ class MCP_CLI{
     String RS_BUFFER    = "";
     String RS_VALUE     = "";
     char   RS_DELIMITER = ',';
+    char   RS_DELIMITER2 = '-';
     int    RS_POSITION  = 0;
     char   RS_FLAG      = '\n';
 
@@ -20,6 +21,8 @@ class MCP_CLI{
     String getCmd();
     bool isCmd(String CMD);
     String getValue();
+    String get1Value();
+    String get2Value();    
 };
 
 #endif //MCP_CLI_h

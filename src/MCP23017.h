@@ -46,6 +46,7 @@ class MCP {
         uint8_t McpState[2]={0};        //last readed values from input 
         uint8_t McpBiStable[2]={0};     //if 1 input configure for bi stable multivibrator on output 
 
+
         //methods
         uint8_t readRaw(uint8_t side);                        
         uint16_t readAll();

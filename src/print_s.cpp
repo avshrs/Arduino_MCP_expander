@@ -33,6 +33,7 @@ void PrintBin::print_binary3x8(uint8_t &v,uint8_t &v1,uint8_t &v2){
            Serial.print("0"); 
     }
     Serial.println(" "); 
+    
 }
 
 void PrintBin::print_binary16(uint16_t &v){  

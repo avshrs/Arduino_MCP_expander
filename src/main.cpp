@@ -16,6 +16,7 @@ MCP_CLI mcp_cli;
 
 void setup(){
     Serial.begin(1000000);
+    mcp_eeprom.init_eeprom();
     mcp_eeprom.read_IOnum();
     mcp_cli.register_eeprom(&mcp_eeprom);
     mcp_input.init_mcp_devices();

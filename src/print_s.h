@@ -11,6 +11,7 @@ class PrintBin{
     void print_binary64(uint64_t v);
     
 
+
 };
 
 #endif
