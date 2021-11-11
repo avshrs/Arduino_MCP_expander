@@ -9,9 +9,6 @@ class PrintBin{
     void print_binary16(uint16_t &v);
     void print_binary32(uint32_t &v);
     void print_binary64(uint64_t v);
-    
-
-
 };
 
 #endif

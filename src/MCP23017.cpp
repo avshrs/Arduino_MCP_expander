@@ -2,7 +2,8 @@
 #include "vars.h"
 #include <Wire.h>
 #include <Arduino.h>
-
+#include "print_s.h"
+PrintBin print;
 
 MCP::MCP(uint8_t MCPADDRSS, uint8_t GIPOA_TYPE, uint8_t GIPOA_PULL, uint8_t GIPOB_TYPE, uint8_t GIPOB_PULL){
     mcpAddress = MCPADDRSS;
@@ -47,14 +48,12 @@ uint8_t MCP::readRaw(uint8_t side){
 }
 
 uint16_t MCP::readAll(){
-    uint8_t valueA = readRaw(GPIOA);
-    uint8_t valueB = readRaw(GPIOB);
-    uint16_t data;
-    
-    data = valueA << 8 | valueB;
-    Serial.print(valueA);
-    Serial.print(valueB);
-    return valueA;
+    uint16_t data = 0;
+    uint8_t addA = GPIOA;
+    uint8_t addB = GPIOB;
+    uint8_t valueA = readRaw(addA);
+    uint8_t valueB = readRaw(addB);
+    return uint16_t(valueA) << 8 | uint16_t(valueB);
 }    
 
 void MCP::writeRaw(uint8_t side, uint8_t memory){

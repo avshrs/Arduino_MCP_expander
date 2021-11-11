@@ -57,11 +57,13 @@ void PrintBin::print_binary32(uint32_t &v){
 }
 
 void PrintBin::print_binary64(uint64_t v){  
-    for (uint8_t i = 0 ; i < (sizeof(v)*8) ; ++i){
-       if ((v & (1 << i )) > 0) 
-           Serial.print("1");
+    for (int i = 0 ; i < (sizeof(v)*8) ; ++i){
+       if (i%8==0){Serial.print(" ");}
+       if ((v & (1 << i )) > 0) {
+       Serial.print("1");
+       }
        else
-           Serial.print("0"); 
+            Serial.print("0"); 
     }
     Serial.println(" "); 
 }

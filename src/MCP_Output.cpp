@@ -3,10 +3,9 @@
 #include "vars.h"
 #include "MCP23017.h"
 #include "MCP_eeprom.h"
-#include "print_s.h"
 
 
-PrintBin pr;
+
 MCP *mcpc_out[4];
 
 void MCP_Outputs::init_mcp_devices(){
@@ -24,8 +23,8 @@ void MCP_Outputs::register_ionum(MCP_eeprom *mcp_eeprom){
 
 void MCP_Outputs::print_ionum(){
     for(uint8_t i=0; i<64 ; i++){
-        Serial.println(i);
-        pr.print_binary8(mcp_eeprom_->IOnum[i]);
+        
+        
     }
 }
 void MCP_Outputs::register_outputs(){

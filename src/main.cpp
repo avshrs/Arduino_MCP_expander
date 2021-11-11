@@ -28,6 +28,7 @@ void setup(){
 }
 
 void loop(){
+    mcp_input.read_all_inputs();
     mcp_cli.serialCom();
     delay(delay_v);    
 }    

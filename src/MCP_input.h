@@ -8,15 +8,23 @@
 
 
 
+
 class MCP_Inputs {
+    private:
+    
+
+
+    MCP *mcpc_in[4];
     public:
-        uint64_t inputs_memory=0;
+        uint16_t inputs_memory[4]={0};
+        uint16_t inputs_buffer[4]={0};
         MCP_eeprom *mcp_eeprom_;
         
         void register_ionum(MCP_eeprom *mcp_eeprom);
         void init_mcp_devices();
-        void scan_all_inputs();
+        void read_all_inputs();
         void add_listener(MCP_Outputs *mcp_outputs, uint8_t input_nr);
+        void inform_listener(int input_nr, uint8_t state);
 
 
 };
