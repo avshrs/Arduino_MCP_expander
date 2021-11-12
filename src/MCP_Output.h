@@ -13,11 +13,12 @@ class MCP_Outputs {
     
     public:
  
-    uint8_t outputs_state[4][2]={0};
+    uint8_t outputs_state[4][2]={{ 0 }};
     
     void init_mcp_devices();
     void register_eeprom(MCP_eeprom *mcp_eeprom);
     void update_output(int outputm, uint8_t value);
     MCP_Data Get_Data_From_Output(int output_nr);
+    void write_output(MCP_Data data, uint8_t value);
 };
 #endif //MCP_Output_h
