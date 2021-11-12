@@ -81,5 +81,6 @@ void MCP_Outputs::write_output(MCP_Data data, uint8_t value){
     else {
         outputs_state[data.chipset][data.side] |= mask;
     }
+    pb2.print_binary8(outputs_state[data.chipset][data.side]);
     mcpc_out[data.chipset]->writeRaw(data.side, outputs_state[data.chipset][data.side]);
 }
