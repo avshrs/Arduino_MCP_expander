@@ -8,10 +8,15 @@ PrintBin pb2;
 
 
 void MCP_Outputs::init_mcp_devices(){
-    mcpc_out[0] = new MCP(MCP1_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
-    mcpc_out[1] = new MCP(MCP2_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
-    mcpc_out[2] = new MCP(MCP3_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);    
-    mcpc_out[3] = new MCP(MCP4_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP); 
+    mcpc_out_0.MCP_Init(MCP1_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
+    mcpc_out_1.MCP_Init(MCP2_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
+    mcpc_out_2.MCP_Init(MCP3_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);    
+    mcpc_out_3.MCP_Init(MCP4_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP); 
+    mcpc_out[0] = &mcpc_out_0;
+    mcpc_out[1] = &mcpc_out_1;
+    mcpc_out[2] = &mcpc_out_2;
+    mcpc_out[3] = &mcpc_out_3;
+    
     outputs_state.fill(0);
     
 }
@@ -30,12 +35,14 @@ void MCP_Outputs::update_output(int output_nr, uint8_t value){
 
     if(mcp_eeprom_->Active_Outputs[output_nr]){
         if(mcp_eeprom_->BiStable[output_nr]){
+            Serial.print(output_nr);
+            Serial.print(" ");
             if(value > 0 ){
                 if ((outputs_state[data.chipset][data.side] & mask) > 0){
-                     write_output(data, 0x00);
+                    write_output(data, 0x00);
                 }
                 else{
-                     write_output(data, (0xff & mask));
+                    write_output(data, (0xff & mask));
                 }
             }
         }
@@ -78,6 +85,6 @@ void MCP_Outputs::write_output(MCP_Data data, uint8_t value){
     else {
         outputs_state[data.chipset][data.side] |= mask;
     }
-    pb2.print_binary8(outputs_state[data.chipset][data.side]);
+    // pb2.print_binary3x8(data.output, data.chipset, outputs_state[data.chipset][data.side]);
     mcpc_out[data.chipset]->writeRaw(data.side, outputs_state[data.chipset][data.side]);
 }

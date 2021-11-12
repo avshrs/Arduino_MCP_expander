@@ -8,10 +8,14 @@
 PrintBin pb;
 
 void MCP_Inputs::init_mcp_devices(){
-    mcpc_in[0] = new MCP(MCP5_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
-    mcpc_in[1] = new MCP(MCP6_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
-    mcpc_in[2] = new MCP(MCP7_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
-    mcpc_in[3] = new MCP(MCP8_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
+    mcpc_in_0.MCP_Init(MCP5_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
+    mcpc_in_1.MCP_Init(MCP6_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
+    mcpc_in_2.MCP_Init(MCP7_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
+    mcpc_in_3.MCP_Init(MCP8_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
+    mcpc_in[0]= &mcpc_in_0;
+    mcpc_in[1]= &mcpc_in_1;
+    mcpc_in[2]= &mcpc_in_2;
+    mcpc_in[3]= &mcpc_in_3;
 }
 
 void MCP_Inputs::register_eeprom(MCP_eeprom *mcp_eeprom){
@@ -27,12 +31,11 @@ void MCP_Inputs::read_all_inputs(){
             if ((inputs_buffer[ii] & (1 << i )) != (inputs_memory[ii] & (1 << i )) ) {
                 if ((inputs_buffer[ii] & (1 << i )) > 0){
                     inform_listener(((ii*16)+i), 0xFF);
-                    // pb.print_binary16(inputs_buffer[ii]);
+                  //  pb.print_binary16(inputs_buffer[ii]);
             }
                 else if ((inputs_buffer[ii] & (1 << i )) < 1){
                     inform_listener(((ii*16)+i), 0x00);
-                    // pb.print_binary16(inputs_buffer[ii]);
-
+                   // pb.print_binary16(inputs_buffer[ii]);
                 }
             }
         }

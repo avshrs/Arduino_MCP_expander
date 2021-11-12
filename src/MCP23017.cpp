@@ -5,9 +5,9 @@
 #include "print_s.h"
 PrintBin print;
 
-MCP::MCP(uint8_t MCPADDRSS, uint8_t GIPOA_TYPE, uint8_t GIPOA_PULL, uint8_t GIPOB_TYPE, uint8_t GIPOB_PULL){
+void MCP::MCP_Init(uint8_t MCPADDRSS, uint8_t GIPOA_TYPE, uint8_t GIPOA_PULL, uint8_t GIPOB_TYPE, uint8_t GIPOB_PULL){
     mcpAddress = MCPADDRSS;
-
+    
     Wire.begin();
     Wire.beginTransmission(MCPADDRSS);  // expander has I2C address 0x20
     Wire.write(IODIRA);   // register 0 is the I/O direction register for Port A

@@ -9,6 +9,10 @@
 class MCP_Inputs {
     private:
         MCP_Outputs *mcp_output_;
+        MCP mcpc_in_0;
+        MCP mcpc_in_1;
+        MCP mcpc_in_2;
+        MCP mcpc_in_3;
         MCP *mcpc_in[4];
         MCP_eeprom *mcp_eeprom_;
     public:
