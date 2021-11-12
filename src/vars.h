@@ -57,7 +57,12 @@ struct OUTPUT_PROTO{
     uint8_t VALUE = 0;
 };
 
-
+struct MCP_Data
+{
+    uint8_t chipset;
+    uint8_t side;
+    uint8_t output;
+}; 
 
 
 

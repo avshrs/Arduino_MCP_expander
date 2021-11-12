@@ -27,9 +27,11 @@ void MCP_Inputs::read_all_inputs(){
             if ((inputs_buffer[ii] & (1 << i )) != (inputs_memory[ii] & (1 << i )) ) {
                 if ((inputs_buffer[ii] & (1 << i )) > 0){
                     inform_listener(((ii*16)+i), 0xFF);
+                    // pb.print_binary16(inputs_buffer[ii]);
             }
-                else {
+                else if ((inputs_buffer[ii] & (1 << i )) < 1){
                     inform_listener(((ii*16)+i), 0x00);
+                    // pb.print_binary16(inputs_buffer[ii]);
 
                 }
             }

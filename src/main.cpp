@@ -24,12 +24,10 @@ void setup(){
     mcp_cli.register_eeprom(&mcp_eeprom);
     
     mcp_output.init_mcp_devices();
-    delay(1000);
-
+    
     mcp_output.register_eeprom(&mcp_eeprom);
     
     mcp_input.init_mcp_devices();
-    delay(1000);
     mcp_input.add_listener(&mcp_output);
     mcp_input.register_eeprom(&mcp_eeprom);
     
