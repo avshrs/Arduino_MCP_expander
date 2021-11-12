@@ -39,20 +39,24 @@ MCP::MCP(uint8_t MCPADDRSS, uint8_t GIPOA_TYPE, uint8_t GIPOA_PULL, uint8_t GIPO
 uint8_t MCP::readRaw(uint8_t side){
     uint8_t r_value = 0; 
     Wire.beginTransmission(mcpAddress); 
+    delay(1);
     Wire.write(side);
+    delay(1);
     Wire.endTransmission();
+    delay(1);
     Wire.requestFrom((int)mcpAddress, 1);
     while(Wire.available())    
-        r_value = Wire.read();
+        r_value = convert_bits(Wire.read());
     return ~r_value;
 }
 
 uint16_t MCP::readAll(){
-    uint16_t data = 0;
     uint8_t addA = GPIOA;
     uint8_t addB = GPIOB;
     uint8_t valueA = readRaw(addA);
     uint8_t valueB = readRaw(addB);
+    // print.print_binary8(valueA);
+    // print.print_binary8(valueB);
     return uint16_t(valueA) << 8 | uint16_t(valueB);
 }    
 
@@ -60,57 +64,19 @@ void MCP::writeRaw(uint8_t side, uint8_t memory){
   Wire.begin();
   Wire.beginTransmission (mcpAddress);
   Wire.write (side);  
-  Wire.write (memory);   
+  Wire.write (convert_bits(memory));   
   Wire.endTransmission ();
 }
 
-void MCP::writeOne(uint8_t pin, uint8_t value, uint8_t side, uint8_t force){
-    uint8_t mask = (1 << pin);
-    uint8_t value_= 0x00;
-    uint8_t _write = GPIOA;
-    uint8_t _read = 0x01;
-    if (side > 0x00) {
-        _read = 0;
-        _write = GPIOB;
-    }
-    if (value > 0) value_ = (1 << pin); 
-    if (value_ > 0 &&  (McpMemory[_read] & mask) == 0){
-        McpMemory[_read] |= mask;
-        if(force == FORCE){
-            if ((McpForce[_read] & mask) == 0)     
-                McpForce[_read] |= mask;
-            else if ((McpForce[_read] & mask) > 0)     
-                McpForce[_read] &= ~mask;
-        }
-    }
-    else if ((value_ & mask) == 0 &&  (McpMemory[_read] & mask) > 0){
-        McpMemory[_read] &= ~mask;
-        if(force == FORCE){
-            if ((McpForce[_read] & mask) == 0)     
-                McpForce[_read] |= mask;
-            else if ((McpForce[_read] & mask) > 0)     
-                McpForce[_read] &= ~mask;
-        }
-    }
-    writeRaw(_write,McpMemory[_read]);
-}
 
-void MCP::writeAll(uint8_t values, uint8_t side, uint8_t force){
-    uint8_t _write = GPIOA;
-    uint8_t _read = 0x01;
-    if (side > 0x00) {
-        _read = 0;
-        _write = GPIOB;
+uint8_t MCP::convert_bits(uint8_t bits){
+    uint8_t tmp = bits;
+    int s = sizeof(bits) * 8 - 1;
+    for (bits>>= 1; bits; bits>>= 1){   
+    tmp <<= 1;
+    tmp |= bits& 1;
+    s--;
     }
-    if (force > 0x00){
-        McpForce[_read] =   (~McpMemory[_read] & ~values & McpForce[_read]) | 
-                            (~McpMemory[_read] &  values & ~McpForce[_read]) | 
-                            ( McpMemory[_read] & ~values & ~McpForce[_read]) | 
-                            ( McpMemory[_read] &  values &  McpForce[_read]);
-        McpMemory[_read] = values; 
-    }
-    else {
-        McpMemory[_read] = values;      
-    }
-    writeRaw(_write,McpMemory[_read]); 
+    tmp <<= s;
+    return tmp;
 }

@@ -45,7 +45,7 @@ class MCP {
         uint8_t McpForce[2]={0};        //if 1 state in McpMemory forced 
         uint8_t McpState[2]={0};        //last readed values from input 
         uint8_t McpBiStable[2]={0};     //if 1 input configure for bi stable multivibrator on output 
-
+        
 
         //methods
         uint8_t readRaw(uint8_t side);                        
@@ -53,7 +53,9 @@ class MCP {
         void writeRaw(uint8_t side, uint8_t memory);
         void writeOne(uint8_t pin, uint8_t value, uint8_t side, uint8_t force);
         void writeAll(uint8_t values, uint8_t side, uint8_t force);
-    
+        uint8_t convert_bits(uint8_t bits);
+        uint8_t convert_bits2(uint8_t bits);
+
 
 };
 #endif //MCP23017_h

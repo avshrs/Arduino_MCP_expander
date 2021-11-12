@@ -66,52 +66,69 @@ String MCP_CLI::get2Value() {
 void MCP_CLI::serialCom(){
   if(rsReceiver()) {
 
-    if(isCmd("set output enable")) {
-        int value = getValue().toInt();
-        mcp_eeprom_->write_active_output(value, 255);
-        mcp_eeprom_->read_active_output(value);
-        Serial.print(value);
+    if(isCmd("set output state")) {
+        int value1 = get1Value().toInt();
+        int value2 = get2Value().toInt();
+        if(value2 > 0) value2 = 0xff;
+        mcp_eeprom_->Write_Output_State(value1, value2);
+        mcp_eeprom_->Read_All_Outputs_States();
+        Serial.print(value1);
         Serial.print(" - set to: ");
-        Serial.println(mcp_eeprom_->AOnum[value], HEX);
+        Serial.println(mcp_eeprom_->Active_Outputs[value1], HEX);
+    }
+    else if(isCmd("get output state")) {
+        mcp_eeprom_->Read_All_Outputs_States();
+        for(int i = 0; i < 64; i++){
+            Serial.print(i);
+            Serial.print(": ");
+            Serial.println(mcp_eeprom_->Active_Outputs[i], HEX);
+        }
+    }
+    else if(isCmd("get io")) {
+        mcp_eeprom_->Read_IO_All_Relations();
+        for(int i = 0; i < 64; i++){
+            Serial.print(i);
+            Serial.print(": ");
+            Serial.println(mcp_eeprom_->IO_Relations[i]);
+        }
     }
     else if(isCmd("set io")) {
         int value1 = get1Value().toInt();
         int value2 = get2Value().toInt();
-        mcp_eeprom_->write_one_IOnum(value1, value2);
-        mcp_eeprom_->read_IOnum();
+        mcp_eeprom_->Write_IO_relation(value1, value2);
+        mcp_eeprom_->Read_IO_All_Relations();
         Serial.print(value1);
         Serial.print(" - set to: ");
-        Serial.println(mcp_eeprom_->IOnum[value1], HEX);
+        Serial.println(mcp_eeprom_->IO_Relations[value1]);
     }
-    else if(isCmd("set output disable")) {
-        int value = getValue().toInt();
-        mcp_eeprom_->write_active_output(value, 0);
-        mcp_eeprom_->read_active_output(value);
-        Serial.print(value);
-        Serial.print(" - set to: ");
-        Serial.println(mcp_eeprom_->AOnum[value], HEX);
-    }
-    else if(isCmd("get outputs states")) {
-        mcp_eeprom_->read_active_outputs();
+    else if(isCmd("get bs")) {
+        mcp_eeprom_->Read_All_BiStable_States();
         for(int i = 0; i < 64; i++){
             Serial.print(i);
             Serial.print(": ");
-            Serial.println(mcp_eeprom_->AOnum[i], HEX);
+            Serial.println(mcp_eeprom_->BiStable[i]);
         }
     }
-    else if(isCmd("get output state")) {
-        int value = getValue().toInt();
-        mcp_eeprom_->read_active_outputs();
-        Serial.print(value);
-        Serial.print(": ");
-        Serial.println(mcp_eeprom_->AOnum[value], HEX);
+    else if(isCmd("set bs")) {
+        int value1 = getValue().toInt();
+        int value2 = get2Value().toInt();
+        if(value2 > 0) value2 = 0xff;
+        mcp_eeprom_->Write_BiStable_State(value1, value2);
+        mcp_eeprom_->Read_All_BiStable_States();
+        Serial.print(value1);
+        Serial.print(" - set to: ");
+        Serial.println(mcp_eeprom_->BiStable[value1]);
     }
+
     
     else if(isCmd("help")) {
-      Serial.println("set output enable \t\t- set_output_enable,nr");
-      Serial.println("set output disable \t\t- set_output_disable,nr");
-      Serial.println("get output state \t\t- get_output_state,nr");
-      Serial.println("get outputs states \t\t- get_outputs_states");
+      Serial.println("set out state \t\t- out-state ,1-1/0");
+      Serial.println("get out state ");
+      Serial.println("get io");
+      Serial.println("set io \t\t- set bs,1-1");
+      Serial.println("get bs");
+      Serial.println("set bs \t\t- set bs,1-1/0");
+    
     }
     else{
         Serial.println("type: help - for more informations");

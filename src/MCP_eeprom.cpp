@@ -9,63 +9,51 @@ int AOmin = 0;
 int AOmax = 64;
 int AOminAddr = startFrom + 64;
 int AOmaxAddr = startFrom + 128;
+int BSmin = 0;
+int BSmax = 64;
+int BSminAddr = startFrom + 128;
+int BSmaxAddr = startFrom + 192;
+
 
 void MCP_eeprom::init_eeprom(){
-    MCP_eeprom::read_IOnum();
-    MCP_eeprom::read_active_outputs();
+    MCP_eeprom::Read_IO_All_Relations();
+    MCP_eeprom::Read_All_Outputs_States();
 }
-// ---------------------------------------------------------
-void MCP_eeprom::write_IOnum(uint8_t io_num[64]){
+
+void MCP_eeprom::Read_IO_All_Relations(){
     for(int i = IOmin; i < IOmax; i++){
-        EEPROM.update(i+IOminAddr, io_num[i]);
-        IOnum[i] = io_num[i];
+        IO_Relations[i] = EEPROM.read(i+IOminAddr);
     }
 }
-
-void MCP_eeprom::read_IOnum(){
-    for(int i = IOmin; i < IOmax; i++){
-        IOnum[i] = EEPROM.read(i+IOminAddr);
-    }
+void MCP_eeprom::Write_IO_relation(int input_number, uint8_t output_number){
+    EEPROM.update(IOminAddr + input_number, output_number);
+    IO_Relations[input_number] = output_number;
 }
-void MCP_eeprom::write_one_IOnum(int io_num, uint8_t value){
-    EEPROM.update(AOminAddr+io_num, value);
-    AOnum[io_num] = value;
-}
-// ---------------------------------------------------------
 
-void MCP_eeprom::read_active_outputs(){
+
+void MCP_eeprom::Read_All_Outputs_States(){
     for(int i = AOmin; i < AOmax; i++){
-        AOnum[i] = EEPROM.read(i+AOminAddr);
+        Active_Outputs[i] = EEPROM.read(i+AOminAddr);
     }
 }
 
-void MCP_eeprom::write_active_output(int ao_num, uint8_t state){
-    EEPROM.update(AOminAddr+ao_num, state);
+void MCP_eeprom::Write_Output_State(int output_number, uint8_t output_state){
+    EEPROM.update(AOminAddr+output_number, output_state);
     for(int i = AOmin; i < AOmax; i++){
-        AOnum[i] = EEPROM.read(i+AOminAddr);
+        Active_Outputs[i] = EEPROM.read(i+AOminAddr);
     }
 }
 
-void MCP_eeprom::read_active_output(int ao_num){
-    AOnum[ao_num] = EEPROM.read(AOminAddr+ao_num);
-}
-// ---------------------------------------------------------
 
-
-
-
-
-
-
-
-void MCP_eeprom::write_clean_IOnum(){
-    for(int i = IOminAddr ; i<IOmaxAddr ; i++){
-        EEPROM.update(i, i);  
+void MCP_eeprom::Read_All_BiStable_States(){
+    for(int i = BSmin; i < BSmax; i++){
+        BiStable[i] = EEPROM.read(i+BSminAddr);
     }
 }
-void MCP_eeprom::write_clean_active_outputs(){
-    for(int i = AOminAddr ; i<AOmaxAddr ; i++){
-        EEPROM.update(i, i);  
-    }
 
+void MCP_eeprom::Write_BiStable_State(int output_number, uint8_t output_state){
+    EEPROM.update(BSminAddr+output_number, output_state);
+    for(int i = BSmin; i < BSmax; i++){
+        BiStable[i] = EEPROM.read(i+BSminAddr);
+    }
 }

@@ -7,20 +7,19 @@ class MCP_eeprom {
     public:
         
 
-        uint8_t IOnum[64];
-        uint8_t AOnum[64];
+        uint8_t IO_Relations[64];
+        uint8_t Active_Outputs[64];
+        uint8_t BiStable[64];
         void init_eeprom();
         
-        void write_IOnum(uint8_t io_num[64]);
-        void read_IOnum();
-        void write_active_outputs(uint8_t io_num[64]);
-        void read_active_outputs();
-        void write_one_IOnum(int io_num, uint8_t value);
-        void write_active_output(int ao_num, uint8_t state);
-        void read_active_output(int ao_num);
-        void write_clean_IOnum();
-        void write_clean_active_outputs();
-    
+        void Read_IO_All_Relations();
+        void Write_IO_relation(int io_num, uint8_t value);
+
+        void Read_All_Outputs_States();
+        void Write_Output_State(int ao_num, uint8_t state);
+
+        void Read_All_BiStable_States();
+        void Write_BiStable_State(int out_nr, uint8_t state);
 };
 
 #endif //MCP_eeprom_h

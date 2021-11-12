@@ -3,36 +3,71 @@
 #include "vars.h"
 #include "MCP23017.h"
 #include "MCP_eeprom.h"
+#include "print_s.h"
+PrintBin pb2;
 
-
-
-MCP *mcpc_out[4];
 
 void MCP_Outputs::init_mcp_devices(){
-    mcpc_out[MPC1] = new MCP(MCP1_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
-    mcpc_out[MPC2] = new MCP(MCP2_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
-    mcpc_out[MPC3] = new MCP(MCP3_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);    
-    mcpc_out[MPC4] = new MCP(MCP4_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP); 
-    
-    
+    mcpc_out[0] = new MCP(MCP1_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
+    mcpc_out[1] = new MCP(MCP2_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
+    mcpc_out[2] = new MCP(MCP3_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);    
+    mcpc_out[3] = new MCP(MCP4_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP); 
+    for(int i = 0; i<4; i++){
+        mcpc_out[i]->writeRaw(GPIOA, 0x00);
+        mcpc_out[i]->writeRaw(GPIOB, 0x00);
+    }
+    delay(1000);
 }
 
-void MCP_Outputs::register_ionum(MCP_eeprom *mcp_eeprom){
+void MCP_Outputs::register_eeprom(MCP_eeprom *mcp_eeprom){
     mcp_eeprom_ = mcp_eeprom;
 }
 
-void MCP_Outputs::print_ionum(){
-    for(uint8_t i=0; i<64 ; i++){
+void MCP_Outputs::update_output(int output_nr, uint8_t value){
+    if(mcp_eeprom_->Active_Outputs[output_nr]){
+        if(mcp_eeprom_->BiStable[output_nr]){
+
+        }
+        else{
+         // TODO add bistable option
+            
+            MCP_Data data = Get_Data_From_Output(output_nr, value)
+
+            uint8_t mask = (1 << chipset_out);
         
-        
+            if((outputs_state[chipset][side] & mask) > (value & mask)){
+                outputs_state[chipset][side] &= ~mask;
+            }
+            else {
+                outputs_state[chipset][side] |= mask;
+            }
+            mcpc_out[chipset]->writeRaw(side, outputs_state[chipset][side]);
+        }
     }
-}
-void MCP_Outputs::register_outputs(){
 
 }
-void MCP_Outputs::update_output(){
 
-}
-void MCP_Outputs::force_update_value(){
-
+MCP_Data MCP_Outputs::Get_Data_From_Output(int output_nr, uint8_t value){
+    MCP_Data data; 
+    int chipset = (output_nr-(output_nr%16))/16;
+    int chipset_outs = output_nr - (chipset*16);
+    int chipset_out = 0;
+    uint8_t side = 0;
+    if(chipset_outs > 7){
+        side = GPIOA; 
+        chipset_out = chipset_outs-8;
+    }
+    else {
+        side = GPIOB; 
+        chipset_out = chipset_outs;
+    }
+    if(value > 0 ){
+        value = 0x01;
+    }
+    else 
+        value = 0x00;
+    data.chipset = chipset;
+    data.side = side;
+    data.value = value;
+    return data;
 }

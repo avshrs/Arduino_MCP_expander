@@ -1,28 +1,28 @@
 #ifndef MCP_Output_h
 #define MCP_Output_h
 #include <Arduino.h>
+#include "vars.h"
 #include "MCP_eeprom.h"
+#include "MCP23017.h"
 
 class MCP_Outputs {
-    public:
+    private:
     MCP_eeprom *mcp_eeprom_;
-
-    uint8_t mcpAddress = 0x20;
-    uint64_t outputs_state = 0;
-    uint64_t forced_flag = 0;
-    uint64_t foced_value = 0; 
-    char output_name[64][10];
-    uint8_t ioselector[64];
-
+    MCP *mcpc_out[4];
+    
+    
+    public:
+    struct MCP_Data
+    {
+        uint8_t chipset;
+        uint8_t side;
+        uint8_t value;
+    };  
+    uint8_t outputs_state[4][2]={0};
+    
     void init_mcp_devices();
-    void register_ionum(MCP_eeprom *mcp_eeprom);
-    void print_ionum();
-    
-    
-    void register_outputs();
-    void update_output();
-    void force_update_value();
-
-
+    void register_eeprom(MCP_eeprom *mcp_eeprom);
+    void update_output(int outputm, uint8_t value);
+    MCP_Data Get_Data_From_Output(int output_nr, uint8_t value);
 };
 #endif //MCP_Output_h
