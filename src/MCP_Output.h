@@ -1,6 +1,7 @@
 #ifndef MCP_Output_h
 #define MCP_Output_h
 #include <Arduino.h>
+#include "Array.h"
 #include "vars.h"
 #include "MCP_eeprom.h"
 #include "MCP23017.h"
@@ -12,8 +13,9 @@ class MCP_Outputs {
     
     
     public:
- 
-    uint8_t outputs_state[4][2]={{ 0 }};
+    Array<Array<uint8_t, 2>, 4> outputs_state;
+    
+//    / uint8_t outputs_state[4][2]={{ 0 }};
     
     void init_mcp_devices();
     void register_eeprom(MCP_eeprom *mcp_eeprom);

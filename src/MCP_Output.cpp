@@ -12,10 +12,7 @@ void MCP_Outputs::init_mcp_devices(){
     mcpc_out[1] = new MCP(MCP2_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);
     mcpc_out[2] = new MCP(MCP3_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP);    
     mcpc_out[3] = new MCP(MCP4_ADDR, MCP_OUT, MCP_NOT_PULLUP, MCP_OUT, MCP_NOT_PULLUP); 
-    for(int i = 0; i<4; i++){
-        mcpc_out[i]->writeRaw(GPIOA, 0x00);
-        mcpc_out[i]->writeRaw(GPIOB, 0x00);
-    }
+    outputs_state.fill(0);
     
 }
 
