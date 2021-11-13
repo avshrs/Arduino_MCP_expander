@@ -39,11 +39,8 @@ void MCP::MCP_Init(uint8_t MCPADDRSS, uint8_t GIPOA_TYPE, uint8_t GIPOA_PULL, ui
 uint8_t MCP::readRaw(uint8_t side){
     uint8_t r_value = 0; 
     Wire.beginTransmission(mcpAddress); 
-    delay(1);
     Wire.write(side);
-    delay(1);
     Wire.endTransmission();
-    delay(1);
     Wire.requestFrom((int)mcpAddress, 1);
     while(Wire.available())    
         r_value = convert_bits(Wire.read());
@@ -55,8 +52,6 @@ uint16_t MCP::readAll(){
     uint8_t addB = GPIOB;
     uint8_t valueA = readRaw(addA);
     uint8_t valueB = readRaw(addB);
-    // print.print_binary8(valueA);
-    // print.print_binary8(valueB);
     return uint16_t(valueA) << 8 | uint16_t(valueB);
 }    
 
