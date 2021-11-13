@@ -2,8 +2,8 @@
 #include "vars.h"
 #include <Wire.h>
 #include <Arduino.h>
-#include "print_s.h"
-PrintBin print;
+
+
 
 void MCP::MCP_Init(uint8_t MCPADDRSS, uint8_t GIPOA_TYPE, uint8_t GIPOA_PULL, uint8_t GIPOB_TYPE, uint8_t GIPOB_PULL){
     mcpAddress = MCPADDRSS;

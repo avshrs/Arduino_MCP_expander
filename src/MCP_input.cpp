@@ -3,9 +3,8 @@
 #include "MCP23017.h"
 #include "vars.h"
 #include "MCP_Output.h"
-#include "print_s.h"
 
-PrintBin pb;
+
 
 void MCP_Inputs::init_mcp_devices(){
     mcpc_in_0.MCP_Init(MCP5_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);

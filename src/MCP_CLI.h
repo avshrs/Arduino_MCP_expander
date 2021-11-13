@@ -1,7 +1,6 @@
 #ifndef MCP_CLI_h
 #define MCP_CLI_h
 #include <Arduino.h>
-#include <stdint.h>
 #include "MCP_eeprom.h"
 class MCP_CLI{
     public:

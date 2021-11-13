@@ -1,7 +1,4 @@
 #include "MCP_CLI.h"
-#include <Arduino.h>
-#include <stdint.h>
-
 
 
 
@@ -24,13 +21,17 @@ bool MCP_CLI::rsReceiver() {
 
 String MCP_CLI::getCmd() {
     RS_POSITION = RS_VALUE.indexOf(RS_DELIMITER);
-    if(RS_POSITION > -1) 
+    if(RS_POSITION > -1) {
         return RS_VALUE.substring(0, RS_POSITION); 
-    else 
+    }
+    else {
         return  RS_VALUE;
+    }
 }
 
 bool MCP_CLI::isCmd(String CMD){
+    Serial.println(CMD);
+    Serial.println(getCmd() );
     if (getCmd() == CMD)
         return true;
     else 
@@ -68,8 +69,9 @@ void MCP_CLI::serialCom(){
     if(isCmd("set output state")) {
         int value1 = get1Value().toInt();
         int value2 = get2Value().toInt();
-        if(value2 > 0) 
+        if(value2 > 0) {
             value2 = 0xff;
+        }
         mcp_eeprom_->Write_Output_State(value1, value2);
         mcp_eeprom_->Read_All_Outputs_States();
         Serial.print(value1);

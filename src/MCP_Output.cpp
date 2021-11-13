@@ -3,8 +3,8 @@
 #include "vars.h"
 #include "MCP23017.h"
 #include "MCP_eeprom.h"
-#include "print_s.h"
-PrintBin pb2;
+
+
 
 
 void MCP_Outputs::init_mcp_devices(){
