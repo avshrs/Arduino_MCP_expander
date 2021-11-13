@@ -8,14 +8,14 @@
 #include "MCP_eeprom.h"
 
 
-class Ether{
+class Ether_io{
     public:
     MCP_eeprom *mcp_eeprom_;
-    SERIALMCPFRAME* data_udp;
-    void checkPayloadData(SERIALMCPFRAME* data);
-    void udpSerialPrint(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, const char *data, uint16_t len);
+    
+
     void Ether_Intit();
     void register_eeprom(MCP_eeprom *mcp_eeprom);
+    void check_ether_buffer();
 };
 
 #endif //Ether_h

@@ -16,8 +16,12 @@ void MCP_Outputs::init_mcp_devices(){
     mcpc_out[1] = &mcpc_out_1;
     mcpc_out[2] = &mcpc_out_2;
     mcpc_out[3] = &mcpc_out_3;
+    for(int i=0; i<4;i++){
+        for(int ii=0; ii<2;ii++){
+            outputs_state[i][ii]=0x00;    
+        }
+    }
     
-    outputs_state.fill(0);
     
 }
 

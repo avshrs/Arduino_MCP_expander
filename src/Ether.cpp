@@ -2,10 +2,12 @@
 #include "vars.h"
 #include <IPAddress.h>
 #include <EtherCard.h>
+#include "MCP_eeprom.h"
 
 
-char textToSend[] = "test 123";
+char textToSend[] = "3";
 static byte mymac[] = { 0x70,0x69,0x69,0x2D,0x30,0x31 };
+SERIALMCPFRAME* data_udp;
 
 byte Ethernet::buffer[700]; // tcp/ip send and receive buffer
 static uint32_t timer;
@@ -13,8 +15,81 @@ const char website[] PROGMEM = "google.pl";
 const int dstPort PROGMEM = 1234;
 const int srcPort PROGMEM = 4321;
 
+MCP_eeprom *mcp_eeprom_;
 
-void Ether::Ether_Intit(){
+
+void checkPayloadData(SERIALMCPFRAME* data){
+    
+    if(data->INSTRUCTIONS == 0x00){
+        //   set output state
+        mcp_eeprom_->Write_Output_State(data->VALUE1, data->VALUE2);
+        mcp_eeprom_->Read_All_Outputs_States();
+        Serial.print(data->VALUE1);
+        Serial.print(":");
+        Serial.println(mcp_eeprom_->Active_Outputs[data->VALUE1], HEX);
+    }
+    if(data->INSTRUCTIONS == 0x01){
+        //   get outputs states
+        mcp_eeprom_->Read_All_Outputs_States();
+        for(int i = 0; i < 64; i++){
+            Serial.print(i);
+            Serial.print(":");
+            Serial.println(mcp_eeprom_->Active_Outputs[i], HEX);
+        }
+    }
+    if(data->INSTRUCTIONS == 0x02){
+        //   set input output correlation
+        mcp_eeprom_->Write_IO_relation(data->VALUE1, data->VALUE2);
+        mcp_eeprom_->Read_IO_All_Relations();
+        Serial.print(data->VALUE1);
+        Serial.print(":");
+        Serial.println(mcp_eeprom_->IO_Relations[data->VALUE1]);
+    }
+    if(data->INSTRUCTIONS == 0x03){
+        //   get input output correlations
+        mcp_eeprom_->Read_IO_All_Relations();
+        for(int i = 0; i < 64; i++){
+            Serial.print(i);
+            Serial.print(": ");
+            Serial.println(mcp_eeprom_->IO_Relations[i]);
+        }
+    }
+    if(data->INSTRUCTIONS == 0x04){
+        //   set Bistable output conf
+        if(data->VALUE2 > 0)
+            data->VALUE2 = 0xff;
+        mcp_eeprom_->Write_BiStable_State(data->VALUE1, data->VALUE2);
+        mcp_eeprom_->Read_All_BiStable_States();
+        Serial.print(data->VALUE1);
+        Serial.print(":");
+        Serial.println(mcp_eeprom_->BiStable[data->VALUE1]);
+    }
+    if(data->INSTRUCTIONS == 0x05){
+        //   get Bistable output conf
+        mcp_eeprom_->Read_All_BiStable_States();
+        for(int i = 0; i < 64; i++){
+            Serial.print(i);
+            Serial.print(": ");
+            Serial.println(mcp_eeprom_->BiStable[i]);
+        }
+    }      
+        
+        data->INSTRUCTIONS= 0;
+        data->VALUE1= 0;
+        data->VALUE2= 0;
+        data->VALUE3= 0;
+    
+    }
+
+
+void udpSerialPrint(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, const char *data, uint16_t len){
+    IPAddress src(src_ip[0],src_ip[1],src_ip[2],src_ip[3]);
+    data_udp =(SERIALMCPFRAME*)data;
+      checkPayloadData(data_udp);
+}
+
+
+void Ether_io::Ether_Intit(){
  
     if (ether.begin(sizeof Ethernet::buffer, mymac, SS) == 0)
         Serial.println(F("Failed to access Ethernet controller"));
@@ -23,60 +98,27 @@ void Ether::Ether_Intit(){
 
     ether.printIp("IP:  ", ether.myip);
     ether.printIp("GW:  ", ether.gwip);
-    ether.printIp("DNS: ", ether.dnsip);
     
     if (!ether.dnsLookup(website))
         Serial.println("DNS failed");
 
     ether.printIp("SRV: ", ether.hisip);
 
-    // //register udpSerialPrint() to port 1337
-    // ether.udpServerListenOnPort(&udpSerialPrint, 1337);
+    // register udpSerialPrint() to port 1337
+    ether.udpServerListenOnPort(&udpSerialPrint, 1337);
 
     // //register udpSerialPrint() to port 42.
-    // ether.udpServerListenOnPort(&udpSerialPrint, 42);
+    ether.udpServerListenOnPort(&udpSerialPrint, 42);
 }
 
-void Ether::register_eeprom(MCP_eeprom *mcp_eeprom){
+void Ether_io::register_eeprom(MCP_eeprom *mcp_eeprom){
     mcp_eeprom_ = mcp_eeprom;
 }
-void Ether::checkPayloadData(SERIALMCPFRAME* data){
-    // Print walue on one sensor 
-    if(data->INSTRUCTIONS == 0x00){  
-        // mcpc[data->MCPNR]->writeOne((uint8_t)((data->VALUE)>>4),(uint8_t)(data->VALUE)&0x0F, (uint8_t)data->MCPSIDE, FORCE);
-    }
-    // Print to all at once 
-    else if(data->INSTRUCTIONS == 0x01){  
-        // mcpc[data->MCPNR]->writeAll(data->VALUE, data->MCPSIDE, FORCE);
-    }
-    // Print values from side 
-    else if(data->INSTRUCTIONS == 0x11){  
-        // mcpc[data->MCPNR]->readAll(data->MCPSIDE);
-        //print on serial 
-        /*
-        TO DO
-        communication back to leasener on ip;
-        */
-    }    
-    
-    
-        data->MCPNR= 0;
-        data->MCPSIDE = 0;
-        data->INSTRUCTIONS= 0;
-        data->VALUE= 0;
-    }
 
 
 
-void Ether::udpSerialPrint(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, const char *data, uint16_t len){
-    IPAddress src(src_ip[0],src_ip[1],src_ip[2],src_ip[3]);
-    data_udp =(SERIALMCPFRAME*)data;
-      checkPayloadData(data_udp);
-}
 
-
-
-void check_ether_buffer(){
+void Ether_io::check_ether_buffer(){
         ether.packetLoop(ether.packetReceive());
     if (millis() > timer) {
       timer = millis() + 5000;
@@ -85,3 +127,6 @@ void check_ether_buffer(){
      ether.sendUdp(textToSend, sizeof(textToSend), srcPort, ether.hisip, dstPort );
     }
 }
+
+
+

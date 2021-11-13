@@ -41,9 +41,9 @@
 
 struct SERIALMCPFRAME{
     uint8_t INSTRUCTIONS = 0;          
-    uint8_t MCPNR = 0; 
-    uint8_t MCPSIDE = 0;
-    uint8_t VALUE = 0;
+    uint8_t VALUE1 = 0; 
+    uint8_t VALUE2 = 0;
+    uint8_t VALUE3 = 0;
 };
 struct IO_ADDRESS{
     uint8_t MCP_ADDRESS=0;
