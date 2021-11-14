@@ -6,7 +6,6 @@
 
 
 
-
 void MCP_Outputs::init_mcp_devices(){
     mcpc_in_0.MCP_Init(MCP5_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
     mcpc_in_1.MCP_Init(MCP6_ADDR, MCP_IN, MCP_PULLUP, MCP_IN, MCP_PULLUP);
@@ -68,8 +67,6 @@ void MCP_Outputs::update_output(int output_nr, uint8_t value){
 
     if(mcp_eeprom_->Active_Outputs[output_nr]){
         if(mcp_eeprom_->BiStable[output_nr]){
-            Serial.print(output_nr);
-            Serial.print(" ");
             if(value > 0 ){
                 if ((outputs_state[data.chipset][data.side] & mask) > 0){
                     write_output(data, 0x00);
