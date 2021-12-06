@@ -45,18 +45,6 @@ struct SERIALMCPFRAME{
     uint8_t VALUE2 = 0;
     uint8_t VALUE3 = 0;
 };
-struct IO_ADDRESS{
-    uint8_t MCP_ADDRESS=0;
-    uint8_t MCP_SIDE=0;
-    uint8_t MCP_NUMBER=0;
-};
-
-struct OUTPUT_PROTO{
-    uint8_t INPUT_NUM = 0;
-    uint8_t TYPE = 0; 
-    uint8_t VALUE = 0;
-};
-
 struct MCP_Data
 {
     uint8_t chipset;

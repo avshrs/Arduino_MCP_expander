@@ -1,18 +1,19 @@
 #include "MCP_eeprom.h"
 #include <EEPROM.h>
-int startFrom = 128;
-int IOmin = 0;
-int IOmax = 64;
-int IOminAddr = startFrom + 0;
-int IOmaxAddr = startFrom + 64;
-int AOmin = 0;
-int AOmax = 64;
-int AOminAddr = startFrom + 64;
-int AOmaxAddr = startFrom + 128;
-int BSmin = 0;
-int BSmax = 64;
-int BSminAddr = startFrom + 128;
-int BSmaxAddr = startFrom + 192;
+
+#define startFrom (128)
+#define IOmin (0)
+#define IOmax (64)
+#define IOminAddr (startFrom + 0)
+#define IOmaxAddr (startFrom + 64)
+#define AOmin (0)
+#define AOmax (64)
+#define AOminAddr (startFrom + 64)
+#define AOmaxAddr (startFrom + 128)
+#define BSmin (0)
+#define BSmax (64)
+#define BSminAddr (startFrom + 128)
+#define BSmaxAddr  (startFrom + 192)
 
 
 void MCP_eeprom::init_eeprom(){
@@ -21,7 +22,7 @@ void MCP_eeprom::init_eeprom(){
 }
 
 void MCP_eeprom::Read_IO_All_Relations(){
-    for(int i = IOmin; i < IOmax; i++){
+    for(uint8_t i = IOmin; i < IOmax; i++){
         IO_Relations[i] = EEPROM.read(i+IOminAddr);
     }
 }
@@ -32,28 +33,28 @@ void MCP_eeprom::Write_IO_relation(int input_number, uint8_t output_number){
 
 
 void MCP_eeprom::Read_All_Outputs_States(){
-    for(int i = AOmin; i < AOmax; i++){
+    for(uint8_t i = AOmin; i < AOmax; i++){
         Active_Outputs[i] = EEPROM.read(i+AOminAddr);
     }
 }
 
 void MCP_eeprom::Write_Output_State(int output_number, uint8_t output_state){
     EEPROM.update(AOminAddr+output_number, output_state);
-    for(int i = AOmin; i < AOmax; i++){
+    for(uint8_t i = AOmin; i < AOmax; i++){
         Active_Outputs[i] = EEPROM.read(i+AOminAddr);
     }
 }
 
 
 void MCP_eeprom::Read_All_BiStable_States(){
-    for(int i = BSmin; i < BSmax; i++){
+    for(uint8_t i = BSmin; i < BSmax; i++){
         BiStable[i] = EEPROM.read(i+BSminAddr);
     }
 }
 
 void MCP_eeprom::Write_BiStable_State(int output_number, uint8_t output_state){
     EEPROM.update(BSminAddr+output_number, output_state);
-    for(int i = BSmin; i < BSmax; i++){
+    for(uint8_t i = BSmin; i < BSmax; i++){
         BiStable[i] = EEPROM.read(i+BSminAddr);
     }
 }

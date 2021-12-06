@@ -5,8 +5,6 @@
 
 class MCP_eeprom {
     public:
-        
-
         uint8_t IO_Relations[64];
         uint8_t Active_Outputs[64];
         uint8_t BiStable[64];

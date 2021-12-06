@@ -66,7 +66,7 @@ String MCP_CLI::get2Value() {
 }
 void MCP_CLI::serialCom(){
   if(rsReceiver()) {
-    if(isCmd("set output state")) {
+    if(isCmd("01")) {
         int value1 = get1Value().toInt();
         int value2 = get2Value().toInt();
         if(value2 > 0) {
@@ -75,35 +75,35 @@ void MCP_CLI::serialCom(){
         mcp_eeprom_->Write_Output_State(value1, value2);
         mcp_eeprom_->Read_All_Outputs_States();
         Serial.print(value1);
-        Serial.print(" - set to: ");
+        Serial.print(" s- ");
         Serial.println(mcp_eeprom_->Active_Outputs[value1], HEX);
     }
-    else if(isCmd("get output state")) {
+    else if(isCmd("00")) {
         mcp_eeprom_->Read_All_Outputs_States();
         for(int i = 0; i < 64; i++){
             Serial.print(i);
-            Serial.print(": ");
+            Serial.print(" - ");
             Serial.println(mcp_eeprom_->Active_Outputs[i], HEX);
         }
     }
-    else if(isCmd("get io\n")) {
+    else if(isCmd("10")) {
         mcp_eeprom_->Read_IO_All_Relations();
         for(int i = 0; i < 64; i++){
             Serial.print(i);
-            Serial.print(": ");
+            Serial.print(" - ");
             Serial.println(mcp_eeprom_->IO_Relations[i]);
         }
     }
-    else if(isCmd("set io\n")) {
+    else if(isCmd("11")) {
         int value1 = get1Value().toInt();
         int value2 = get2Value().toInt();
         mcp_eeprom_->Write_IO_relation(value1, value2);
         mcp_eeprom_->Read_IO_All_Relations();
         Serial.print(value1);
-        Serial.print(" - set to: ");
+        Serial.print(" - ");
         Serial.println(mcp_eeprom_->IO_Relations[value1]);
     }
-    else if(isCmd("get bs")) {
+    else if(isCmd("20")) {
         mcp_eeprom_->Read_All_BiStable_States();
         for(int i = 0; i < 64; i++){
             Serial.print(i);
@@ -111,7 +111,7 @@ void MCP_CLI::serialCom(){
             Serial.println(mcp_eeprom_->BiStable[i]);
         }
     }
-    else if(isCmd("set bs")) {
+    else if(isCmd("21")) {
         int value1 = getValue().toInt();
         int value2 = get2Value().toInt();
         if(value2 > 0)
@@ -123,17 +123,8 @@ void MCP_CLI::serialCom(){
         Serial.println(mcp_eeprom_->BiStable[value1]);
     }
 
-    else if(isCmd("help")) {
-      Serial.println("set out state \t\t- out-state ,1-1/0");
-      Serial.println("get out state ");
-      Serial.println("get io");
-      Serial.println("set io \t\t- set bs,1-1");
-      Serial.println("get bs");
-      Serial.println("set bs \t\t- set bs,1-1/0");
-    
-    }
     else{
-        Serial.println("type: help - for more informations");
+        Serial.println("cmd err");
     }
   }
 }
