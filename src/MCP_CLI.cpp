@@ -1,8 +1,5 @@
 #include "MCP_CLI.h"
 
-#define  RS_FLAG    ('\n')
-#define  RS_DELIMITER   (',')
-#define  RS_DELIMITER2 ('-')
 
 
 bool MCP_CLI::rsReceiver() {
@@ -46,15 +43,15 @@ String MCP_CLI::getValue() {
     if(RS_POSITION > -1) 
         return RS_VALUE.substring(RS_POSITION + 1, RS_VALUE.length());
     else 
-        return "else";
+        return F("else");
 }
 String MCP_CLI::get1Value() {
-    String str = MCP_CLI::getValue();
+    String str = getValue();
     RS_POSITION = str.indexOf(RS_DELIMITER2);
     if(RS_POSITION > -1) 
         return str.substring(0, RS_POSITION); 
     else 
-        return "else";
+        return F("else");
 }
 
 String MCP_CLI::get2Value() {
@@ -65,11 +62,11 @@ String MCP_CLI::get2Value() {
     if(RS_POSITION > -1) 
         return str.substring(RS_POSITION + 1, RS_VALUE.length());
     else 
-        return "else";
+        return F("else");
 }
 void MCP_CLI::serialCom(){
   if(rsReceiver()) {
-    if(isCmd("01")) {
+    if(isCmd(F("set_out"))) {
         int value1 = get1Value().toInt();
         int value2 = get2Value().toInt();
         if(value2 > 0) {
@@ -78,43 +75,43 @@ void MCP_CLI::serialCom(){
         mcp_eeprom_->Write_Output_State(value1, value2);
         mcp_eeprom_->Read_All_Outputs_States();
         Serial.print(value1);
-        Serial.print(" s- ");
+        Serial.print(F(" - set to: "));
         Serial.println(mcp_eeprom_->Active_Outputs[value1], HEX);
     }
-    else if(isCmd("00")) {
+    else if(isCmd(F("get_out"))) {
         mcp_eeprom_->Read_All_Outputs_States();
         for(int i = 0; i < 64; i++){
             Serial.print(i);
-            Serial.print(" - ");
+            Serial.print(F(" - "));
             Serial.println(mcp_eeprom_->Active_Outputs[i], HEX);
         }
     }
-    else if(isCmd("10")) {
+    else if(isCmd(F("get_io"))) {
         mcp_eeprom_->Read_IO_All_Relations();
         for(int i = 0; i < 64; i++){
             Serial.print(i);
-            Serial.print(" - ");
+            Serial.print(F(" - "));
             Serial.println(mcp_eeprom_->IO_Relations[i]);
         }
     }
-    else if(isCmd("11")) {
+    else if(isCmd(F("set_io"))) {
         int value1 = get1Value().toInt();
         int value2 = get2Value().toInt();
         mcp_eeprom_->Write_IO_relation(value1, value2);
         mcp_eeprom_->Read_IO_All_Relations();
         Serial.print(value1);
-        Serial.print(" - ");
+        Serial.print(F(" - set to: "));
         Serial.println(mcp_eeprom_->IO_Relations[value1]);
     }
-    else if(isCmd("20")) {
+    else if(isCmd(F("get_bs"))) {
         mcp_eeprom_->Read_All_BiStable_States();
         for(int i = 0; i < 64; i++){
             Serial.print(i);
-            Serial.print(": ");
+            Serial.print(F(": "));
             Serial.println(mcp_eeprom_->BiStable[i]);
         }
     }
-    else if(isCmd("21")) {
+    else if(isCmd(F("set_bs"))) {
         int value1 = getValue().toInt();
         int value2 = get2Value().toInt();
         if(value2 > 0)
@@ -122,13 +119,10 @@ void MCP_CLI::serialCom(){
         mcp_eeprom_->Write_BiStable_State(value1, value2);
         mcp_eeprom_->Read_All_BiStable_States();
         Serial.print(value1);
-        Serial.print(" - set to: ");
+        Serial.print(F(" - set to: "));
         Serial.println(mcp_eeprom_->BiStable[value1]);
     }
 
-    else{
-        Serial.println("cmd err");
-    }
   }
 }
 

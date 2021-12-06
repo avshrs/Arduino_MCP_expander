@@ -9,7 +9,7 @@ char textToSend[] = "3";
 static byte mymac[] = { 0x70,0x69,0x69,0x2D,0x30,0x31 };
 SERIALMCPFRAME* data_udp;
 
-byte Ethernet::buffer[150]; // tcp/ip send and receive buffer
+byte Ethernet::buffer[300]; // tcp/ip send and receive buffer
 static uint32_t timer;
 const char website[] PROGMEM = "google.pl";
 const int dstPort PROGMEM = 1234;
@@ -97,13 +97,13 @@ void Ether_io::Ether_Intit(){
     if (!ether.dhcpSetup())
         Serial.println(F("DHCP failed"));
 
-    ether.printIp(F("IP:  "), ether.myip);
-    ether.printIp(F("GW:  "), ether.gwip);
+    ether.printIp("IP:  ", ether.myip);
+    ether.printIp("GW:  ", ether.gwip);
     
     if (!ether.dnsLookup(website))
-        Serial.println(F("DNS failed"));
+        Serial.println("DNS f");
 
-    ether.printIp(F("SRV: "), ether.hisip);
+    
 
     // register udpSerialPrint() to port 1337
     ether.udpServerListenOnPort(&udpSerialPrint, 1337);

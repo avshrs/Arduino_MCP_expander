@@ -4,9 +4,9 @@
 void PrintBin::print_binary8(uint8_t &v){  
     for (uint8_t i = 0 ; i < (sizeof(v)*8) ; ++i){
        if ((v & (1 << i )) > 0) 
-           Serial.print("1");
+           Serial.print(F("1"));
        else
-           Serial.print("0"); 
+           Serial.print(F("0")); 
     }
     Serial.println(" "); 
 }
