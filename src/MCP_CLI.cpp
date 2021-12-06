@@ -1,5 +1,8 @@
 #include "MCP_CLI.h"
 
+#define  RS_FLAG    ('\n')
+#define  RS_DELIMITER   (',')
+#define  RS_DELIMITER2 ('-')
 
 
 bool MCP_CLI::rsReceiver() {

@@ -2,13 +2,13 @@
 #include "MCP_eeprom.h"
 #include "MCP_Manager.h"
 #include "Ether.h"
-
+#include "MCP_CLI.h"
 #define delay_v (0)
 
 MCP_eeprom mcp_eeprom;
 MCP_Manager mcp_manager;
 
-//MCP_CLI mcp_cli;
+MCP_CLI mcp_cli;
 Ether_io ether_io;    
 
 void setup(){
@@ -30,7 +30,7 @@ void setup(){
 void loop(){
     mcp_manager.read_all_inputs();
     ether_io.check_ether_buffer();
-    // mcp_cli.serialCom();
+    mcp_cli.serialCom();
     delay(delay_v);    
     
 }    

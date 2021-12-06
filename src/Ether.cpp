@@ -9,13 +9,14 @@ char textToSend[] = "3";
 static byte mymac[] = { 0x70,0x69,0x69,0x2D,0x30,0x31 };
 SERIALMCPFRAME* data_udp;
 
-byte Ethernet::buffer[700]; // tcp/ip send and receive buffer
+byte Ethernet::buffer[150]; // tcp/ip send and receive buffer
 static uint32_t timer;
 const char website[] PROGMEM = "google.pl";
 const int dstPort PROGMEM = 1234;
 const int srcPort PROGMEM = 4321;
 
 MCP_eeprom *mcp_eeprom_;
+
 
 
 void checkPayloadData(SERIALMCPFRAME* data){
@@ -25,7 +26,7 @@ void checkPayloadData(SERIALMCPFRAME* data){
         mcp_eeprom_->Write_Output_State(data->VALUE1, data->VALUE2);
         mcp_eeprom_->Read_All_Outputs_States();
         Serial.print(data->VALUE1);
-        Serial.print(":");
+        Serial.print(F(" : "));
         Serial.println(mcp_eeprom_->Active_Outputs[data->VALUE1], HEX);
     }
     if(data->INSTRUCTIONS == 0x01){
@@ -33,7 +34,7 @@ void checkPayloadData(SERIALMCPFRAME* data){
         mcp_eeprom_->Read_All_Outputs_States();
         for(int i = 0; i < 64; i++){
             Serial.print(i);
-            Serial.print(":");
+            Serial.print(F(" : "));
             Serial.println(mcp_eeprom_->Active_Outputs[i], HEX);
         }
     }
@@ -42,7 +43,7 @@ void checkPayloadData(SERIALMCPFRAME* data){
         mcp_eeprom_->Write_IO_relation(data->VALUE1, data->VALUE2);
         mcp_eeprom_->Read_IO_All_Relations();
         Serial.print(data->VALUE1);
-        Serial.print(":");
+        Serial.print(F(" : "));
         Serial.println(mcp_eeprom_->IO_Relations[data->VALUE1]);
     }
     if(data->INSTRUCTIONS == 0x03){
@@ -50,7 +51,7 @@ void checkPayloadData(SERIALMCPFRAME* data){
         mcp_eeprom_->Read_IO_All_Relations();
         for(int i = 0; i < 64; i++){
             Serial.print(i);
-            Serial.print(": ");
+            Serial.print(F(" : "));
             Serial.println(mcp_eeprom_->IO_Relations[i]);
         }
     }
@@ -61,7 +62,7 @@ void checkPayloadData(SERIALMCPFRAME* data){
         mcp_eeprom_->Write_BiStable_State(data->VALUE1, data->VALUE2);
         mcp_eeprom_->Read_All_BiStable_States();
         Serial.print(data->VALUE1);
-        Serial.print(":");
+        Serial.print(F(" : "));
         Serial.println(mcp_eeprom_->BiStable[data->VALUE1]);
     }
     if(data->INSTRUCTIONS == 0x05){
@@ -69,7 +70,7 @@ void checkPayloadData(SERIALMCPFRAME* data){
         mcp_eeprom_->Read_All_BiStable_States();
         for(int i = 0; i < 64; i++){
             Serial.print(i);
-            Serial.print(": ");
+            Serial.print(F(" : "));
             Serial.println(mcp_eeprom_->BiStable[i]);
         }
     }      
@@ -96,13 +97,13 @@ void Ether_io::Ether_Intit(){
     if (!ether.dhcpSetup())
         Serial.println(F("DHCP failed"));
 
-    ether.printIp("IP:  ", ether.myip);
-    ether.printIp("GW:  ", ether.gwip);
+    ether.printIp(F("IP:  "), ether.myip);
+    ether.printIp(F("GW:  "), ether.gwip);
     
     if (!ether.dnsLookup(website))
-        Serial.println("DNS failed");
+        Serial.println(F("DNS failed"));
 
-    ether.printIp("SRV: ", ether.hisip);
+    ether.printIp(F("SRV: "), ether.hisip);
 
     // register udpSerialPrint() to port 1337
     ether.udpServerListenOnPort(&udpSerialPrint, 1337);

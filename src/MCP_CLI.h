@@ -8,10 +8,9 @@ class MCP_CLI{
     char   RS_CHAR;
     String RS_BUFFER    = "";
     String RS_VALUE     = "";
-    char   RS_DELIMITER = ',';
-    char   RS_DELIMITER2 = '-';
+
     int    RS_POSITION  = 0;
-    char   RS_FLAG      = '\n';
+
 
     void register_eeprom(MCP_eeprom *mcp_eeprom);
     void read_command();
