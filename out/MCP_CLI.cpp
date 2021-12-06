@@ -1,22 +1,27 @@
 #include "MCP_CLI.h"
 
 
+#define LINE_BUF_SIZE 50   //Maximum input string length
+#define ARG_BUF_SIZE 64     //Maximum argument string length
+#define MAX_NUM_ARGS 8      //Maximum number of arguments
+char line[LINE_BUF_SIZE];
 
-bool MCP_CLI::rsReceiver() {
-    if(Serial.available()) {
-        RS_CHAR = char(Serial.read());
-        if(RS_CHAR == RS_FLAG) {
-            RS_VALUE = RS_BUFFER;
-            RS_BUFFER = "";
-            return true;
+void read_line(){
+    String line_string;
+ 
+    while(!Serial.available());
+ 
+    if(Serial.available()){
+        line_string = Serial.readStringUntil("\n");
+        if(line_string.length() < LINE_BUF_SIZE){
+          line_string.toCharArray(line, LINE_BUF_SIZE);
+          Serial.println(line_string);
         }
         else{
-            RS_BUFFER += RS_CHAR;
-            return false;
+          Serial.println("Input string too long.");
+          
         }
     }
-    else 
-        return false;
 }
 
 String MCP_CLI::getCmd() {
