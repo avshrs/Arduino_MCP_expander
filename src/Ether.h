@@ -10,9 +10,7 @@
 
 class Ether_io{
     public:
-    MCP_eeprom *mcp_eeprom_;
     
-
     void Ether_Intit();
     void register_eeprom(MCP_eeprom *mcp_eeprom);
     void check_ether_buffer();

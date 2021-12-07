@@ -13,17 +13,15 @@ Ether_io ether_io;
 void setup(){
     Serial.begin(1000000);
     Serial.println(F("Setup Start"));
+
     mcp_eeprom.init_eeprom();
-    Serial.println(F("Eeprom init"));
+
     ether_io.Ether_Intit();
-    Serial.println(F("Ether init"));
-    ether_io.register_eeprom(&mcp_eeprom);
+    mcp_manager.init_mcp_devices();
     
-    mcp_manager.init_mcp_devices();
-    Serial.println(F("MCP Manager init"));
-    mcp_manager.register_eeprom(&mcp_eeprom);
     ether_io.register_eeprom(&mcp_eeprom);
-    mcp_manager.init_mcp_devices();
+    mcp_manager.register_eeprom(&mcp_eeprom);
+
     Serial.println(F("Setup End"));
 }
 
@@ -31,5 +29,4 @@ void loop(){
     mcp_manager.read_all_inputs();
     ether_io.check_ether_buffer();
     delay(delay_v);    
-    
 }    

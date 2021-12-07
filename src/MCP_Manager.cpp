@@ -45,8 +45,6 @@ void MCP_Manager::update_output(int output_nr, uint8_t value){
 
     if(mcp_eeprom_->Active_Outputs[output_nr]){
         if(mcp_eeprom_->BiStable[output_nr]){
-            // Serial.print(output_nr);
-            // Serial.print(" ");
             if(value > 0 ){
                 if ((outputs_state[data.chipset][data.side] & mask) > 0){
                     write_output(data, 0x00);
@@ -57,6 +55,10 @@ void MCP_Manager::update_output(int output_nr, uint8_t value){
             }
         }
         else{
+            Serial.print(F("update_output:"));
+            Serial.print(output_nr);
+            Serial.print(F(" to "));
+            Serial.println(value, HEX);
             write_output(data, value);      
         }
     }
@@ -71,12 +73,10 @@ void MCP_Manager::read_all_inputs(){
         for(int i=0; i<16 ; i++){
             if ((inputs_buffer[ii] & (1 << i )) != (inputs_memory[ii] & (1 << i )) ) {
                 if ((inputs_buffer[ii] & (1 << i )) > 0){
-                    update_output(((ii*16)+i), 0xFF);
-                  //  pb.print_binary16(inputs_buffer[ii]);
+                    update_output(mcp_eeprom_->IO_Relations[((ii*16)+i)], 0xFF);
             }
                 else if ((inputs_buffer[ii] & (1 << i )) < 1){
-                    update_output(((ii*16)+i), 0x00);
-                   // pb.print_binary16(inputs_buffer[ii]);
+                    update_output(mcp_eeprom_->IO_Relations[((ii*16)+i)], 0x00);
                 }
             }
         }
